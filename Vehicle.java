@@ -9,6 +9,8 @@ public abstract class Vehicle implements Rentable {
     private boolean isAvailable;
     private Customer currentCustomer;
     private int rentalDays;
+    private double averageRating;
+    private int ratingCount;
 
     // Constructors with validation
     public Vehicle(String vehicleId, String model, double baseRentalRate, boolean isAvailable ){
@@ -25,6 +27,8 @@ public abstract class Vehicle implements Rentable {
         this.model=model;
         this.baseRentalRate=baseRentalRate;
         this.isAvailable=isAvailable;
+        this.averageRating = 0.0;
+        this.ratingCount = 0;
     }
     //Providing Getters
 
@@ -68,6 +72,17 @@ public abstract class Vehicle implements Rentable {
         isAvailable = available;
     }
 
+    public void rate(double rating) {
+        if (rating < 0.0 || rating > 5.0) {
+            throw new IllegalArgumentException("Rating must be between 0 and 5.");
+        }
+        this.averageRating = (this.averageRating * ratingCount + rating) / (++ratingCount);
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
     @Override
     public void rent(Customer customer, int days) {
         if (!isAvailable) {
@@ -97,6 +112,7 @@ public abstract class Vehicle implements Rentable {
                 ", model='" + model + '\'' +
                 ", baseRentalRate=" + baseRentalRate +
                 ", isAvailable=" + isAvailable +
+                ", averageRating=" + averageRating +
                 '}';
     }
     // Abstract methods for rental calculation
